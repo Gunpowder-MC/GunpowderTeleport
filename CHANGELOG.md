@@ -1,5 +1,5 @@
-# GunpowderTemplate 1.0
+# Gunpowder Teleport 1.0
 
-- No changes
+- Port to standalone module
 
 ---
