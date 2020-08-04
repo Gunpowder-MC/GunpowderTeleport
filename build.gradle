@@ -92,6 +92,7 @@ task remapMavenJar(type: net.fabricmc.loom.task.RemapJarTask, dependsOn: shadowJ
         input = file("${jarpath}-dev.jar")
         archiveName = "${project.name}-${project.version}-maven.jar"
         addNestedDependencies = false
+        remapAccessWidener = true
     }
 }
 
