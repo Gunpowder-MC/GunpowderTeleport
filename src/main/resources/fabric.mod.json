@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "gunpowder-teleport",
+  "version": "${version}",
+  "name": "Gunpowder Teleport",
+  "description": "Gunpowder Teleport Module",
+  "license": "MIT",
+  "icon": "assets/gunpowder/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "gunpowder:modules": [
+      "io.github.gunpowder.GunpowderTeleportModule"
+    ]
+  },
+  "custom": {
+    "modmenu:parent": "gunpowder-base"
+  },
+  "depends": {
+    "gunpowder-base": ">=${gunpowder}",
+    "fabricloader": ">=0.8.9",
+    "fabric": "*"
+  }
+}
