@@ -48,9 +48,8 @@ object WarpCommand {
     val handler by lazy {
         GunpowderMod.instance.registry.getModelHandler(APIWarpHandler::class.java)
     }
-    val teleportDelay by lazy {
-        GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
-    }
+    val teleportDelay: Int
+        get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
@@ -143,7 +142,7 @@ object WarpCommand {
                         StoredWarp(
                                 warp,
                                 Vec3i(player.pos.x, player.pos.y, player.pos.z),
-                                player.world.dimensionRegistryKey.value
+                                player.world.registryKey.value
                         )
                 )) {
             player.sendMessage(LiteralText("Warp '$warp' set"), false)

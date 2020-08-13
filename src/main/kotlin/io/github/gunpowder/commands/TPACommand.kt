@@ -34,16 +34,15 @@ import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.entities.TPACache
-import net.minecraft.command.arguments.EntityArgumentType
+import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import java.util.concurrent.CompletableFuture
 
 object TPACommand {
-    val config by lazy {
-        GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java)
-    }
+    val config: TeleportConfig
+        get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java)
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {

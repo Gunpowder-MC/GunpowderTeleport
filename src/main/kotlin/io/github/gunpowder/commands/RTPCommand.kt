@@ -39,9 +39,8 @@ import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
 object RTPCommand {
-    val config by lazy {
-        GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java)
-    }
+    val config: TeleportConfig
+        get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java)
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {

@@ -46,9 +46,8 @@ object BackCommand {
 
     val lastPosition = mutableMapOf<UUID, LastPosition>()
 
-    val teleportDelay by lazy {
-        GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
-    }
+    val teleportDelay: Int
+        get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
@@ -70,7 +69,7 @@ object BackCommand {
                 player(context.source.player)
                 destination(p.position)
                 facing(p.facing)
-                dimension(p.dimension.dimensionRegistryKey.value)
+                dimension(p.dimension)
             }
 
             if (teleportDelay > 0) {

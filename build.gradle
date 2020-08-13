@@ -59,7 +59,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:$project.fabric_api"
 
     // Gunpowder
-    implementation "io.github.gunpowder:gunpowder-api:${project.gunpowder}+${project.minecraft}"
+    modApi "io.github.gunpowder:gunpowder-api:${project.gunpowder}+${project.minecraft}"
 
     // Database
     implementation "org.jetbrains.exposed:exposed-core:$project.exposed"

@@ -33,12 +33,12 @@ import io.github.gunpowder.configs.TeleportConfig
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.math.Vec3i
+import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
 object SpawnCommand {
-    val teleportDelay by lazy {
-        GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
-    }
+    val teleportDelay: Int
+        get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
@@ -54,7 +54,7 @@ object SpawnCommand {
 
         TeleportRequest.builder {
             player(player)
-            dimension(DimensionType.OVERWORLD_REGISTRY_KEY)
+            dimension(World.OVERWORLD)
             destination(Vec3i(props.spawnX, props.spawnY, props.spawnZ))
         }.execute(teleportDelay.toLong())
 
