@@ -155,7 +155,7 @@ if (file('secrets.gradle').exists()) {
     curseforge {
         apiKey = project.cfKey
         project {
-            id = "${project.cdId}"
+            id = "${project.cfId}"
             releaseType = "release"
             changelogType = "markdown"
             changelog = file("CHANGELOG.md").readLines().join("\n").split("---")[0]
