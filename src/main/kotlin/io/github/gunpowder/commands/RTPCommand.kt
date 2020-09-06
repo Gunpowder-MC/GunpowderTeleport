@@ -30,11 +30,13 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.ext.center
 import net.minecraft.block.Blocks
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.Vec3i
 import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
@@ -77,7 +79,7 @@ object RTPCommand {
 
         TeleportRequest.builder {
             player(player)
-            destination(Vec3d(newX, i.toDouble(), newZ))
+            destination(BlockPos(newX, i.toDouble(), newZ).center())
             dimension(DimensionType.OVERWORLD_REGISTRY_KEY.value)
             facing(player.rotationClient)
         }.execute(config.teleportDelay.toLong())

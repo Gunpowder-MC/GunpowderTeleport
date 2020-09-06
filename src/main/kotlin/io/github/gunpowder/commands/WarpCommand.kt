@@ -35,6 +35,7 @@ import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
 import io.github.gunpowder.api.module.teleport.dataholders.StoredWarp
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.ext.center
 import io.github.gunpowder.modelhandlers.WarpHandler
 import net.minecraft.server.command.CommandSource
 import net.minecraft.server.command.ServerCommandSource
@@ -107,7 +108,7 @@ object WarpCommand {
 
         TeleportRequest.builder {
             player(player)
-            destination(warp.location)
+            destination(warp.location.center())
             dimension(warp.dimension)
         }.execute(teleportDelay.toLong())
 

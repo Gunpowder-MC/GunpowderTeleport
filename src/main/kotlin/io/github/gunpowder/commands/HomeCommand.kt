@@ -36,10 +36,12 @@ import io.github.gunpowder.api.builders.Text
 import io.github.gunpowder.api.module.teleport.dataholders.StoredHome
 import io.github.gunpowder.api.module.teleport.modelhandlers.HomeHandler
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.ext.center
 import net.minecraft.server.command.CommandSource
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
+import net.minecraft.util.math.Vec3d
 import net.minecraft.util.math.Vec3i
 import java.util.concurrent.CompletableFuture
 
@@ -104,7 +106,7 @@ object HomeCommand {
         TeleportRequest.builder {
             player(player)
             dimension(home.dimension)
-            destination(home.location)
+            destination(home.location.center())
         }.execute(teleportDelay.toLong())
 
         if (teleportDelay > 0) {
@@ -126,7 +128,7 @@ object HomeCommand {
         TeleportRequest.builder {
             player(player)
             dimension(home.dimension)
-            destination(home.location)
+            destination(home.location.center())
         }.execute(teleportDelay.toLong())
 
         if (teleportDelay > 0) {

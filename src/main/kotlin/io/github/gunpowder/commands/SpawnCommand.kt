@@ -30,6 +30,7 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.ext.center
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.math.Vec3i
@@ -55,7 +56,7 @@ object SpawnCommand {
         TeleportRequest.builder {
             player(player)
             dimension(World.OVERWORLD)
-            destination(Vec3i(props.spawnX, props.spawnY, props.spawnZ))
+            destination(Vec3i(props.spawnX, props.spawnY, props.spawnZ).center())
         }.execute(teleportDelay.toLong())
 
         if (teleportDelay > 0) {

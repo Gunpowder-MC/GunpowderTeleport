@@ -1,6 +1,6 @@
 # Gunpowder Teleport 1.0.1
 
-- None
+- /home, /spawn and /warp now teleports to the center of the block
 
 
 ---
