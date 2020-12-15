@@ -83,6 +83,8 @@ object HomeHandler : APIHomeHandler {
         if (c.size >= homeLimit) {
             if (c[home.name] == null) {
                 return false
+            } else {
+                delHome(home.user, home.name)
             }
         }
 

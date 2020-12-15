@@ -37,7 +37,7 @@ import io.github.gunpowder.api.module.teleport.dataholders.StoredHome
 import io.github.gunpowder.api.module.teleport.modelhandlers.HomeHandler
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.ext.center
-import net.minecraft.server.command.CommandSource
+import net.minecraft.command.CommandSource
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
