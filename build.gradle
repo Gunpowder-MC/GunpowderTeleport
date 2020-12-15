@@ -143,7 +143,7 @@ if (file('secrets.gradle').exists()) {
         publications {
             mavenJava(MavenPublication) {
                 afterEvaluate {
-                    artifact source: file("${jarpath}-maven.jar"), classifier: ''
+                    artifact source: file("${jarpath}.jar"), classifier: ''
                     artifact source: file("${jarpath}-dev.jar"), classifier: 'dev'
                     artifact source: file("${jarpath}-sources.jar"), classifier: 'sources'
                     artifact source: file("${jarpath}-sources-dev.jar"), classifier: 'sources-dev'
