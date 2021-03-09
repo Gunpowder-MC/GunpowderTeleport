@@ -1,6 +1,6 @@
-# Gunpowder Teleport 1.0.2
+# Gunpowder Teleport 1.0.3
 
-- None
+- Fix RTP teleporting to outside worldborder.
 
 ---
 
