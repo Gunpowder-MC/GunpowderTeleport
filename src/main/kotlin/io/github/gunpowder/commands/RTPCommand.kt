@@ -63,6 +63,12 @@ object RTPCommand {
         var newY = 0.0
         var i = world.seaLevel
 
+        if (!world.worldBorder.contains(BlockPos(newX, i.toDouble(), newZ))) {
+            // Cancel
+            player.sendMessage(LiteralText("Target outside of world border, cancelling..."), false)
+            return -1
+        }
+
         if (world.getBlockState(BlockPos(newX, world.seaLevel.toDouble(), newZ)).block == Blocks.VOID_AIR) {
             // Void world, cancel teleport
             player.sendMessage(LiteralText("Void world detected, cancelling..."), false)
