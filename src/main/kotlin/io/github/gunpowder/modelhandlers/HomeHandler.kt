@@ -84,7 +84,11 @@ object HomeHandler : APIHomeHandler {
             if (c[home.name] == null) {
                 return false
             } else {
-                delHome(home.user, home.name)
+                db.transaction {
+                    HomeTable.deleteWhere {
+                        HomeTable.owner.eq(home.user).and(HomeTable.name.eq(home.name))
+                    }
+                }.get()
             }
         }
 

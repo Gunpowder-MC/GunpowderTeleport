@@ -1,3 +1,9 @@
+# Gunpowder Teleport 1.0.4
+
+- Fix homes not overwriting old ones
+
+---
+
 # Gunpowder Teleport 1.0.3
 
 - Fix RTP teleporting to outside worldborder.
