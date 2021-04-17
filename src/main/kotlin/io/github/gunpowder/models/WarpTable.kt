@@ -27,7 +27,7 @@ package io.github.gunpowder.models
 import org.jetbrains.exposed.sql.Table
 
 object WarpTable : Table() {
-    val name = text("name")
+    val name = varchar("name", 255)
     val x = integer("x")
     val y = integer("y")
     val z = integer("z")

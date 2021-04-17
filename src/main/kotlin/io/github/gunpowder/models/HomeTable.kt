@@ -28,7 +28,7 @@ import org.jetbrains.exposed.sql.Table
 
 object HomeTable : Table() {
     val owner = uuid("owner")
-    val name = text("homeName")
+    val name = varchar("name", 255)
     val x = integer("x")
     val y = integer("y")
     val z = integer("z")
