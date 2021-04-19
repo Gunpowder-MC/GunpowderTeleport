@@ -1,3 +1,9 @@
+# Gunpowder Teleport 1.0.5
+
+- Hotfix for homes
+
+---
+
 # Gunpowder Teleport 1.0.4
 
 - Fix homes not overwriting old ones
