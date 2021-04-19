@@ -83,12 +83,14 @@ object HomeHandler : APIHomeHandler {
         if (c.size >= homeLimit) {
             if (c[home.name] == null) {
                 return false
-            } else {
-                db.transaction {
-                    HomeTable.deleteWhere {
-                        HomeTable.owner.eq(home.user).and(HomeTable.name.eq(home.name))
-                    }
-                }.get()
+            }
+        }
+
+        if (c[home.name] != null) {
+            db.transaction {
+                HomeTable.deleteWhere {
+                    HomeTable.owner.eq(home.user).and(HomeTable.name.eq(home.name))
+                }
             }
         }
 
