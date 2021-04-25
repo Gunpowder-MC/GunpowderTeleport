@@ -51,12 +51,11 @@ object SpawnCommand {
 
     fun execute(context: CommandContext<ServerCommandSource>): Int {
         val player = context.source.player
-        val props = context.source.world.levelProperties
 
         TeleportRequest.builder {
             player(player)
             dimension(World.OVERWORLD)
-            destination(Vec3i(props.spawnX, props.spawnY, props.spawnZ).center())
+            destination(context.source.world.spawnPos.center())
         }.execute(teleportDelay.toLong())
 
         if (teleportDelay > 0) {
