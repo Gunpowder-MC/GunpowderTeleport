@@ -24,10 +24,11 @@
 
 package io.github.gunpowder.models
 
+import io.github.gunpowder.api.exposed.PlayerTable
 import org.jetbrains.exposed.sql.Table
 
 object HomeTable : Table() {
-    val owner = uuid("owner")
+    val owner = uuid("owner") references PlayerTable.id
     val name = varchar("homeName", 255)
     val x = integer("x")
     val y = integer("y")

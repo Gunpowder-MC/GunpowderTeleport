@@ -55,7 +55,7 @@ object SpawnCommand {
         TeleportRequest.builder {
             player(player)
             dimension(World.OVERWORLD)
-            destination(context.source.world.spawnPos.center())
+            destination(GunpowderMod.instance.server.getWorld(World.OVERWORLD)!!.spawnPos.center())
         }.execute(teleportDelay.toLong())
 
         if (teleportDelay > 0) {

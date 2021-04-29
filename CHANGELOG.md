@@ -1,3 +1,10 @@
+# Gunpowder Teleport 1.0.6
+
+- Fixed /spawn not teleporting to overworld spawn properly.
+- HomeTable now references PlayerTable
+
+---
+
 # Gunpowder Teleport 1.0.5
 
 - Hotfix for homes
