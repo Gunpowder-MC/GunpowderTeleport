@@ -35,8 +35,6 @@ import io.github.gunpowder.modelhandlers.WarpHandler
 import io.github.gunpowder.models.HomeTable
 import io.github.gunpowder.models.WarpTable
 import java.util.function.Supplier
-import io.github.gunpowder.api.module.teleport.modelhandlers.HomeHandler as APIHomeHandler
-import io.github.gunpowder.api.module.teleport.modelhandlers.WarpHandler as APIWarpHandler
 
 class GunpowderTeleportModule : GunpowderModule {
     override val name = "teleport"
@@ -44,11 +42,11 @@ class GunpowderTeleportModule : GunpowderModule {
     val gunpowder: GunpowderMod = GunpowderMod.instance
 
     override fun registerCommands() {
-        gunpowder.registry.registerCommand(BackCommand::register)
-        gunpowder.registry.registerCommand(HomeCommand::register)
-        gunpowder.registry.registerCommand(RTPCommand::register)
-        gunpowder.registry.registerCommand(SpawnCommand::register)
-        gunpowder.registry.registerCommand(TPACommand::register)
+//        gunpowder.registry.registerCommand(BackCommand::register)
+//        gunpowder.registry.registerCommand(HomeCommand::register)
+//        gunpowder.registry.registerCommand(RTPCommand::register)
+//        gunpowder.registry.registerCommand(SpawnCommand::register)
+//        gunpowder.registry.registerCommand(TPACommand::register)
         gunpowder.registry.registerCommand(WarpCommand::register)
     }
 
@@ -65,10 +63,9 @@ class GunpowderTeleportModule : GunpowderModule {
         })
     }
 
-    override fun onInitialize() {
+    override fun registerTables() {
+
         gunpowder.registry.registerTable(WarpTable)
         gunpowder.registry.registerTable(HomeTable)
-        gunpowder.registry.registerModelHandler(APIWarpHandler::class.java, Supplier { WarpHandler })
-        gunpowder.registry.registerModelHandler(APIHomeHandler::class.java, Supplier { HomeHandler })
     }
 }

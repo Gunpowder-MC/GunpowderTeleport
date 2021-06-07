@@ -25,16 +25,16 @@
 package io.github.gunpowder.modelhandlers
 
 import io.github.gunpowder.api.GunpowderMod
-import io.github.gunpowder.api.module.teleport.dataholders.StoredWarp
+import io.github.gunpowder.entities.StoredWarp
 import io.github.gunpowder.models.WarpTable
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3i
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
-import io.github.gunpowder.api.module.teleport.modelhandlers.WarpHandler as APIWarpHandler
 
-object WarpHandler : APIWarpHandler {
+object WarpHandler {
     private val db by lazy {
         GunpowderMod.instance.database
     }
@@ -49,22 +49,22 @@ object WarpHandler : APIWarpHandler {
             WarpTable.selectAll().map {
                 it[WarpTable.name] to StoredWarp(
                         it[WarpTable.name],
-                        Vec3i(it[WarpTable.x], it[WarpTable.y], it[WarpTable.z]),
-                        Identifier(it[WarpTable.dimension]))
+                        it[WarpTable.pos],
+                        it[WarpTable.dimension])
             }.toMap()
         }.get()
         cache.putAll(temp)
     }
 
-    override fun getWarp(name: String): StoredWarp? {
+    fun getWarp(name: String): StoredWarp? {
         return cache[name]
     }
 
-    override fun getWarps(): Map<String, StoredWarp> {
+    fun getWarps(): Map<String, StoredWarp> {
         return cache.toMap()
     }
 
-    override fun delWarp(warp: String): Boolean {
+    fun delWarp(warp: String): Boolean {
         if (cache.containsKey(warp)) {
             db.transaction {
                 WarpTable.deleteWhere {
@@ -77,16 +77,14 @@ object WarpHandler : APIWarpHandler {
         return false
     }
 
-    override fun newWarp(warp: StoredWarp): Boolean {
+    fun newWarp(warp: StoredWarp): Boolean {
         if (!cache.containsKey(warp.name)) {
             cache[warp.name] = warp
             db.transaction {
                 WarpTable.insert {
                     it[WarpTable.name] = warp.name
-                    it[WarpTable.x] = warp.location.x
-                    it[WarpTable.y] = warp.location.y
-                    it[WarpTable.z] = warp.location.z
-                    it[WarpTable.dimension] = warp.dimension.toString()
+                    it[WarpTable.pos] = BlockPos(warp.location)
+                    it[WarpTable.dimension] = warp.dimension
                 }
             }
             return true

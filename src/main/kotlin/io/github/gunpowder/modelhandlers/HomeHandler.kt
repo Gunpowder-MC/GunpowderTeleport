@@ -25,19 +25,19 @@
 package io.github.gunpowder.modelhandlers
 
 import io.github.gunpowder.api.GunpowderMod
-import io.github.gunpowder.api.module.teleport.dataholders.StoredHome
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.entities.StoredHome
 import io.github.gunpowder.models.HomeTable
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3i
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
 import java.util.*
-import io.github.gunpowder.api.module.teleport.modelhandlers.HomeHandler as APIHomeHandler
 
-object HomeHandler : APIHomeHandler {
+object HomeHandler {
     private val db by lazy {
         GunpowderMod.instance.database
     }
@@ -60,8 +60,8 @@ object HomeHandler : APIHomeHandler {
                             StoredHome(
                                     owner,
                                     it[HomeTable.name],
-                                    Vec3i(it[HomeTable.x], it[HomeTable.y], it[HomeTable.z]),
-                                    Identifier(it[HomeTable.dimension])
+                                    it[HomeTable.pos],
+                                    it[HomeTable.dimension]
                             )
                 }.toMap().toMutableMap()
             }.toMap()
@@ -69,15 +69,15 @@ object HomeHandler : APIHomeHandler {
         cache.putAll(temp)
     }
 
-    override fun getHome(user: UUID, home: String): StoredHome? {
+    fun getHome(user: UUID, home: String): StoredHome? {
         return cache[user]?.get(home)
     }
 
-    override fun getHomes(user: UUID): Map<String, StoredHome> {
+    fun getHomes(user: UUID): Map<String, StoredHome> {
         return cache[user] ?: mapOf()
     }
 
-    override fun newHome(home: StoredHome): Boolean {
+    fun newHome(home: StoredHome): Boolean {
         val c = cache[home.user] ?: mutableMapOf()
 
         if (c.size >= homeLimit) {
@@ -101,17 +101,15 @@ object HomeHandler : APIHomeHandler {
             HomeTable.insert {
                 it[owner] = home.user
                 it[name] = home.name
-                it[x] = home.location.x
-                it[y] = home.location.y
-                it[z] = home.location.z
-                it[dimension] = home.dimension.toString()
+                it[pos] = BlockPos(home.location)
+                it[dimension] = home.dimension
             }
         }
 
         return true
     }
 
-    override fun delHome(player: UUID, home: String): Boolean {
+    fun delHome(player: UUID, home: String): Boolean {
         val c = cache[player] ?: mutableMapOf()
 
         if (c[home] == null) {

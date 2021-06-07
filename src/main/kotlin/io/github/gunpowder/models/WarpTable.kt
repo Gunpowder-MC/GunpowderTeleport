@@ -24,14 +24,14 @@
 
 package io.github.gunpowder.models
 
+import io.github.gunpowder.api.exposed.blockPos
+import io.github.gunpowder.api.exposed.identifier
 import org.jetbrains.exposed.sql.Table
 
 object WarpTable : Table() {
     val name = varchar("name", 255)
-    val x = integer("x")
-    val y = integer("y")
-    val z = integer("z")
-    val dimension = varchar("dimension", 255)
+    val pos = blockPos("pos")
+    val dimension = identifier("dimension")
 
     override val primaryKey = PrimaryKey(name)
 }

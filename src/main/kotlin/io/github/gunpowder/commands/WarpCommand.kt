@@ -33,8 +33,8 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
-import io.github.gunpowder.api.module.teleport.dataholders.StoredWarp
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.entities.StoredWarp
 import io.github.gunpowder.ext.center
 import io.github.gunpowder.modelhandlers.WarpHandler
 import net.minecraft.command.CommandSource
@@ -43,11 +43,10 @@ import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.Vec3i
 import java.util.concurrent.CompletableFuture
-import io.github.gunpowder.api.module.teleport.modelhandlers.WarpHandler as APIWarpHandler
 
 object WarpCommand {
     val handler by lazy {
-        GunpowderMod.instance.registry.getModelHandler(APIWarpHandler::class.java)
+        WarpHandler
     }
     val teleportDelay: Int
         get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
@@ -55,10 +54,6 @@ object WarpCommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("warp") {
-                argument("warp", StringArgumentType.greedyString()) {
-                    executes(WarpCommand::execute)
-                    suggests(WarpCommand::suggestWarps)
-                }
                 literal("list") {
                     executes(WarpCommand::executeList)
                 }
@@ -69,6 +64,10 @@ object WarpCommand {
                     argument("warp", StringArgumentType.greedyString()) {
                         executes(WarpCommand::executeSet)
                     }
+                }
+                argument("warp", StringArgumentType.greedyString()) {
+                    executes(WarpCommand::execute)
+                    suggests(WarpCommand::suggestWarps)
                 }
             }
 

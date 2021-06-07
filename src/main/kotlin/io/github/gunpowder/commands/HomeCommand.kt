@@ -33,10 +33,10 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
-import io.github.gunpowder.api.module.teleport.dataholders.StoredHome
-import io.github.gunpowder.api.module.teleport.modelhandlers.HomeHandler
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.entities.StoredHome
 import io.github.gunpowder.ext.center
+import io.github.gunpowder.modelhandlers.HomeHandler
 import net.minecraft.command.CommandSource
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
@@ -47,7 +47,7 @@ import java.util.concurrent.CompletableFuture
 
 object HomeCommand {
     private val handler by lazy {
-        GunpowderMod.instance.registry.getModelHandler(HomeHandler::class.java)
+        HomeHandler
     }
 
     private val teleportDelay

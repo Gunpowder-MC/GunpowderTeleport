@@ -1,3 +1,10 @@
+# Gunpowder Teleport 1.0.7
+
+- Updated to 1.17
+- Use proper database column types
+
+---
+
 # Gunpowder Teleport 1.0.6
 
 - Fixed /spawn not teleporting to overworld spawn properly.
