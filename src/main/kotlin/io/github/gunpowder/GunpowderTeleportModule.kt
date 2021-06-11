@@ -42,11 +42,11 @@ class GunpowderTeleportModule : GunpowderModule {
     val gunpowder: GunpowderMod = GunpowderMod.instance
 
     override fun registerCommands() {
-//        gunpowder.registry.registerCommand(BackCommand::register)
-//        gunpowder.registry.registerCommand(HomeCommand::register)
-//        gunpowder.registry.registerCommand(RTPCommand::register)
-//        gunpowder.registry.registerCommand(SpawnCommand::register)
-//        gunpowder.registry.registerCommand(TPACommand::register)
+        gunpowder.registry.registerCommand(BackCommand::register)
+        gunpowder.registry.registerCommand(HomeCommand::register)
+        gunpowder.registry.registerCommand(RTPCommand::register)
+        gunpowder.registry.registerCommand(SpawnCommand::register)
+        gunpowder.registry.registerCommand(TPACommand::register)
         gunpowder.registry.registerCommand(WarpCommand::register)
     }
 

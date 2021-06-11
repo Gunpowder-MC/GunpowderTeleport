@@ -14,7 +14,7 @@ buildscript {
 
 // Plugins
 plugins {
-    id 'io.github.gunpowder' version '0.2.5'
+    id 'io.github.gunpowder' version '0.2.6'
 }
 
 dependencies {

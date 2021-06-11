@@ -1,3 +1,9 @@
+# Gunpowder Teleport 1.0.8
+
+- Added missing commands
+
+---
+
 # Gunpowder Teleport 1.0.7
 
 - Updated to 1.17
