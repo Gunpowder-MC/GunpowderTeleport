@@ -28,6 +28,7 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.GunpowderModule
 import io.github.gunpowder.commands.*
 import io.github.gunpowder.configs.TeleportConfig
+import io.github.gunpowder.events.PermissionRegisterCallback
 import io.github.gunpowder.events.PlayerDeathCallback
 import io.github.gunpowder.events.PlayerTeleportCallback
 import io.github.gunpowder.modelhandlers.HomeHandler
@@ -48,6 +49,16 @@ class GunpowderTeleportModule : GunpowderModule {
         gunpowder.registry.registerCommand(SpawnCommand::register)
         gunpowder.registry.registerCommand(TPACommand::register)
         gunpowder.registry.registerCommand(WarpCommand::register)
+
+        // Register additional permissions
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.back.timeout.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.home.timeout.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.home.limit.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.rtp.timeout.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.rtp.distance.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.spawn.timeout.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.tpa.timeout.[int]")
+        PermissionRegisterCallback.EVENT.invoker().trigger("teleport.warp.timeout.[int]")
     }
 
     override fun registerConfigs() {

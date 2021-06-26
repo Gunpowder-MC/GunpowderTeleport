@@ -29,6 +29,7 @@ import com.mojang.brigadier.context.CommandContext
 import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.LiteralText
@@ -52,6 +53,7 @@ object BackCommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("back") {
+                permission("teleport.back", 0)
                 executes(BackCommand::execute)
             }
         }
@@ -65,6 +67,8 @@ object BackCommand {
 
             context.source.sendFeedback(LiteralText("Teleporting to previous location"), false)
 
+            val delay = context.source.player.getPermission("teleport.back.timeout.[int]", teleportDelay)
+
             val request = TeleportRequest.builder {
                 player(context.source.player)
                 destination(p.position)
@@ -72,11 +76,11 @@ object BackCommand {
                 dimension(p.dimension)
             }
 
-            if (teleportDelay > 0) {
-                context.source.sendFeedback(LiteralText("Teleporting in ${teleportDelay.toLong()} seconds..."), false)
+            if (delay > 0) {
+                context.source.sendFeedback(LiteralText("Teleporting in $delay seconds..."), false)
             }
 
-            request.execute(teleportDelay.toLong())
+            request.execute(delay.toLong())
 
             return 1
         }

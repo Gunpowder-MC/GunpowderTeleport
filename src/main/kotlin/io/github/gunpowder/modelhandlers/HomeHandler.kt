@@ -25,6 +25,7 @@
 package io.github.gunpowder.modelhandlers
 
 import io.github.gunpowder.api.GunpowderMod
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.entities.StoredHome
 import io.github.gunpowder.models.HomeTable
@@ -54,17 +55,17 @@ object HomeHandler {
         val temp = db.transaction {
             val homes = HomeTable.selectAll()
             val owners = homes.map { it[HomeTable.owner] }.toList()
-            owners.map { owner ->
-                owner to homes.filter { it[HomeTable.owner] == owner }.map {
+            owners.associateWith { owner ->
+                homes.filter { it[HomeTable.owner] == owner }.associate {
                     it[HomeTable.name] to
                             StoredHome(
-                                    owner,
-                                    it[HomeTable.name],
-                                    it[HomeTable.pos],
-                                    it[HomeTable.dimension]
+                                owner,
+                                it[HomeTable.name],
+                                it[HomeTable.pos],
+                                it[HomeTable.dimension]
                             )
-                }.toMap().toMutableMap()
-            }.toMap()
+                }.toMutableMap()
+            }
         }.get()
         cache.putAll(temp)
     }
@@ -77,12 +78,14 @@ object HomeHandler {
         return cache[user] ?: mapOf()
     }
 
-    fun newHome(home: StoredHome): Boolean {
+    fun newHome(home: StoredHome): String {
         val c = cache[home.user] ?: mutableMapOf()
 
-        if (c.size >= homeLimit) {
+        val limit = GunpowderMod.instance.server.playerManager.getPlayer(home.user)?.getPermission("teleport.home.limit.[int]", homeLimit) ?: homeLimit
+
+        if (c.size >= limit) {
             if (c[home.name] == null) {
-                return false
+                return "Exceeded home limit!"
             }
         }
 
@@ -106,7 +109,7 @@ object HomeHandler {
             }
         }
 
-        return true
+        return ""
     }
 
     fun delHome(player: UUID, home: String): Boolean {
