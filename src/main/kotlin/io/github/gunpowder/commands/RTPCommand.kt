@@ -55,7 +55,7 @@ object RTPCommand {
     fun execute(context: CommandContext<ServerCommandSource>): Int {
         val distance = config.rtpDistance
         val player = context.source.player
-        val world = context.source.minecraftServer.getWorld(World.OVERWORLD)!!
+        val world = context.source.server.getWorld(World.OVERWORLD)!!
         val deltaX = distance * player.random.nextGaussian() + 1
         val deltaZ = distance * player.random.nextGaussian() + 1
         val newX = deltaX + player.x

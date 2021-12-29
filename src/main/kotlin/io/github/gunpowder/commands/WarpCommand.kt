@@ -45,10 +45,10 @@ import net.minecraft.util.math.Vec3i
 import java.util.concurrent.CompletableFuture
 
 object WarpCommand {
-    val handler by lazy {
+    private val handler by lazy {
         WarpHandler
     }
-    val teleportDelay: Int
+    private val teleportDelay: Int
         get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java).teleportDelay
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
@@ -94,7 +94,7 @@ object WarpCommand {
         }
     }
 
-    fun execute(context: CommandContext<ServerCommandSource>): Int {
+    private fun execute(context: CommandContext<ServerCommandSource>): Int {
         val warpName = StringArgumentType.getString(context, "warp")
         val warp = handler.getWarp(warpName)
 
@@ -118,8 +118,8 @@ object WarpCommand {
         return 1
     }
 
-    fun executeList(context: CommandContext<ServerCommandSource>): Int {
-        val warps = (handler as WarpHandler).cache
+    private fun executeList(context: CommandContext<ServerCommandSource>): Int {
+        val warps = handler.cache
         val text = Text.builder {
             text("Warps:")
             warps.forEach {
@@ -135,7 +135,7 @@ object WarpCommand {
         return 1
     }
 
-    fun executeSet(context: CommandContext<ServerCommandSource>): Int {
+    private fun executeSet(context: CommandContext<ServerCommandSource>): Int {
         val warp = StringArgumentType.getString(context, "warp")
         val player = context.source.player
         if (handler.newWarp(
@@ -152,7 +152,7 @@ object WarpCommand {
         return -1
     }
 
-    fun executeDel(context: CommandContext<ServerCommandSource>): Int {
+    private fun executeDel(context: CommandContext<ServerCommandSource>): Int {
         val warp = StringArgumentType.getString(context, "warp")
         if (handler.delWarp(warp)) {
             context.source.player.sendMessage(LiteralText("Warp '$warp' deleted"), false)
@@ -162,8 +162,8 @@ object WarpCommand {
         return -1
     }
 
-    fun suggestWarps(context: CommandContext<ServerCommandSource>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
-        val homes = (handler as WarpHandler).cache
+    private fun suggestWarps(context: CommandContext<ServerCommandSource>, builder: SuggestionsBuilder): CompletableFuture<Suggestions> {
+        val homes = handler.cache
         // TODO: Match input
         return CommandSource.suggestMatching(homes.map { it.key }, builder)
     }
