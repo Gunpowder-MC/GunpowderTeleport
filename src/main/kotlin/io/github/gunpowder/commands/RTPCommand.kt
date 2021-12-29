@@ -29,6 +29,7 @@ import com.mojang.brigadier.context.CommandContext
 import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.ext.center
 import net.minecraft.block.Blocks
@@ -41,20 +42,21 @@ import net.minecraft.world.World
 import net.minecraft.world.dimension.DimensionType
 
 object RTPCommand {
-    val config: TeleportConfig
+    private val config: TeleportConfig
         get() = GunpowderMod.instance.registry.getConfig(TeleportConfig::class.java)
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("rtp") {
+                permission("teleport.rtp", 0)
                 executes(RTPCommand::execute)
             }
         }
     }
 
-    fun execute(context: CommandContext<ServerCommandSource>): Int {
-        val distance = config.rtpDistance
+    private fun execute(context: CommandContext<ServerCommandSource>): Int {
         val player = context.source.player
+        val distance = player.getPermission("teleport.rtp.distance.[int]", config.rtpDistance)
         val world = context.source.server.getWorld(World.OVERWORLD)!!
         val deltaX = distance * player.random.nextGaussian() + 1
         val deltaZ = distance * player.random.nextGaussian() + 1
@@ -83,15 +85,17 @@ object RTPCommand {
             newY++
         }
 
+        val delay = context.source.player.getPermission("teleport.rtp.timeout.[int]", config.teleportDelay)
+
         TeleportRequest.builder {
             player(player)
             destination(BlockPos(newX, i.toDouble(), newZ).center())
             dimension(DimensionType.OVERWORLD_REGISTRY_KEY.value)
             facing(player.rotationClient)
-        }.execute(config.teleportDelay.toLong())
+        }.execute(delay.toLong())
 
-        if (config.teleportDelay > 0) {
-            context.source.sendFeedback(LiteralText("Teleporting in ${config.teleportDelay.toLong()} seconds..."), false)
+        if (delay > 0) {
+            context.source.sendFeedback(LiteralText("Teleporting in $delay seconds..."), false)
         }
 
         return 1

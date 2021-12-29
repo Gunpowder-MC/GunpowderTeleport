@@ -29,6 +29,7 @@ import com.mojang.brigadier.context.CommandContext
 import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.ext.center
 import net.minecraft.server.command.ServerCommandSource
@@ -44,6 +45,7 @@ object SpawnCommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("spawn") {
+                permission("teleport.spawn", 0)
                 executes(SpawnCommand::execute)
             }
         }
@@ -52,14 +54,16 @@ object SpawnCommand {
     fun execute(context: CommandContext<ServerCommandSource>): Int {
         val player = context.source.player
 
+        val delay = context.source.player.getPermission("teleport.spawn.timeout.[int]", teleportDelay)
+
         TeleportRequest.builder {
             player(player)
             dimension(World.OVERWORLD)
             destination(GunpowderMod.instance.server.getWorld(World.OVERWORLD)!!.spawnPos.center())
-        }.execute(teleportDelay.toLong())
+        }.execute(delay.toLong())
 
-        if (teleportDelay > 0) {
-            context.source.sendFeedback(LiteralText("Teleporting in ${teleportDelay.toLong()} seconds..."), false)
+        if (delay > 0) {
+            context.source.sendFeedback(LiteralText("Teleporting in $delay seconds..."), false)
         }
 
         return 1

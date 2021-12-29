@@ -33,6 +33,7 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.entities.StoredHome
 import io.github.gunpowder.ext.center
@@ -56,13 +57,16 @@ object HomeCommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("home") {
+                permission("teleport.home", 0)
                 executes(HomeCommand::execute)
 
                 literal("list") {
+                    permission("teleport.home.list", 0)
                     executes(HomeCommand::executeList)
                 }
 
                 literal("set") {
+                    permission("teleport.home.set", 0)
                     executes(HomeCommand::executeSet)
 
                     argument("home", StringArgumentType.greedyString()) {
@@ -77,6 +81,7 @@ object HomeCommand {
             }
 
             command("delhome") {
+                permission("teleport.home.set", 0)
                 executes(HomeCommand::executeDel)
 
                 argument("home", StringArgumentType.greedyString()) {
@@ -86,6 +91,7 @@ object HomeCommand {
             }
 
             command("sethome") {
+                permission("teleport.home.set", 0)
                 executes(HomeCommand::executeSet)
 
                 argument("home", StringArgumentType.greedyString()) {
@@ -103,14 +109,16 @@ object HomeCommand {
             return -1
         }
 
+        val delay = player.getPermission("teleport.home.timeout.[int]", teleportDelay)
+
         TeleportRequest.builder {
             player(player)
             dimension(home.dimension)
             destination(home.location.center())
-        }.execute(teleportDelay.toLong())
+        }.execute(delay.toLong())
 
-        if (teleportDelay > 0) {
-            context.source.sendFeedback(LiteralText("Teleporting in ${teleportDelay.toLong()} seconds..."), false)
+        if (delay > 0) {
+            context.source.sendFeedback(LiteralText("Teleporting in $delay seconds..."), false)
         }
 
         return 1
@@ -125,14 +133,16 @@ object HomeCommand {
             return -1
         }
 
+        val delay = player.getPermission("teleport.home.timeout.[int]", teleportDelay)
+
         TeleportRequest.builder {
             player(player)
             dimension(home.dimension)
             destination(home.location.center())
-        }.execute(teleportDelay.toLong())
+        }.execute(delay.toLong())
 
-        if (teleportDelay > 0) {
-            context.source.sendFeedback(LiteralText("Teleporting in ${teleportDelay.toLong()} seconds..."), false)
+        if (delay > 0) {
+            context.source.sendFeedback(LiteralText("Teleporting in $delay seconds..."), false)
         }
 
         return 1
@@ -157,36 +167,38 @@ object HomeCommand {
 
     fun executeSet(context: CommandContext<ServerCommandSource>): Int {
         val player = context.source.player
-        if (handler.newHome(
+        val err = handler.newHome(
                         StoredHome(
                                 player.uuid,
                                 "home",
                                 Vec3i(player.pos.x, player.pos.y, player.pos.z),
                                 player.world.registryKey.value
                         )
-                )) {
+                )
+        if (err == "") {
             player.sendMessage(LiteralText("Home 'home' set"), false)
             return 1
         }
-        player.sendMessage(LiteralText("Home 'home' already exists"), false)
+        player.sendMessage(LiteralText(err), false)
         return -1
     }
 
     fun executeSetTarget(context: CommandContext<ServerCommandSource>): Int {
         val home = StringArgumentType.getString(context, "home")
         val player = context.source.player
-        if (handler.newHome(
+        val err = handler.newHome(
                         StoredHome(
                                 player.uuid,
                                 home,
                                 Vec3i(player.pos.x, player.pos.y, player.pos.z),
                                 player.world.registryKey.value
                         )
-                )) {
+                )
+        if (err == "") {
             player.sendMessage(LiteralText("Home '$home' set"), false)
             return 1
         }
-        player.sendMessage(LiteralText("Home '$home' already exists"), false)
+        player.sendMessage(LiteralText(err), false)
         return -1
     }
 

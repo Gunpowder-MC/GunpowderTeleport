@@ -1,6 +1,13 @@
-# Gunpowder Teleport 1.0.9
+# Gunpowder Teleport 1.1.1
 
 - Update to 1.18.1
+
+---
+
+# Gunpowder Teleport 1.1.0
+
+- Updated to use permissions for commands
+- Limits and timeouts can be configured with permissions too
 
 ---
 

@@ -33,6 +33,7 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.entities.StoredWarp
 import io.github.gunpowder.ext.center
@@ -54,27 +55,26 @@ object WarpCommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("warp") {
+                permission("teleport.warps.?", 0)
                 literal("list") {
+                    permission("teleport.warps.list", 0)
                     executes(WarpCommand::executeList)
                 }
                 literal("set") {
-                    requires {
-                        it.hasPermissionLevel(4)
-                    }
+                    permission("teleport.warps.set", 0)
                     argument("warp", StringArgumentType.greedyString()) {
                         executes(WarpCommand::executeSet)
                     }
                 }
                 argument("warp", StringArgumentType.greedyString()) {
+                    permission("teleport.warps.warp", 0)
                     executes(WarpCommand::execute)
                     suggests(WarpCommand::suggestWarps)
                 }
             }
 
             command("setwarp") {
-                requires {
-                    it.hasPermissionLevel(4)
-                }
+                permission("teleport.warps.set", 0)
 
                 argument("warp", StringArgumentType.greedyString()) {
                     executes(WarpCommand::executeSet)
@@ -105,14 +105,16 @@ object WarpCommand {
 
         val player = context.source.player
 
+        val delay = context.source.player.getPermission("teleport.warp.timeout.[int]", teleportDelay)
+
         TeleportRequest.builder {
             player(player)
             destination(warp.location.center())
             dimension(warp.dimension)
-        }.execute(teleportDelay.toLong())
+        }.execute(delay.toLong())
 
-        if (teleportDelay > 0) {
-            context.source.sendFeedback(LiteralText("Teleporting in ${teleportDelay.toLong()} seconds..."), false)
+        if (delay > 0) {
+            context.source.sendFeedback(LiteralText("Teleporting in $delay seconds..."), false)
         }
 
         return 1

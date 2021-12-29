@@ -32,6 +32,7 @@ import io.github.gunpowder.api.GunpowderMod
 import io.github.gunpowder.api.builders.Command
 import io.github.gunpowder.api.builders.TeleportRequest
 import io.github.gunpowder.api.builders.Text
+import io.github.gunpowder.api.ext.getPermission
 import io.github.gunpowder.configs.TeleportConfig
 import io.github.gunpowder.entities.TPACache
 import net.minecraft.command.argument.EntityArgumentType
@@ -47,18 +48,21 @@ object TPACommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         Command.builder(dispatcher) {
             command("tpa") {
+                permission("teleport.tpa", 0)
                 argument("user", EntityArgumentType.player()) {
                     executes(TPACommand::executeTpa)
                 }
             }
 
             command("tpahere") {
+                permission("teleport.tpahere", 0)
                 argument("user", EntityArgumentType.player()) {
                     executes(TPACommand::executeTpahere)
                 }
             }
 
             command("tpaccept") {
+                permission("teleport.tpaccept", 0)
                 executes {
                     executeTpaccept(it, true)
                 }
@@ -71,6 +75,7 @@ object TPACommand {
             }
 
             command("tpdeny") {
+                permission("teleport.tpdeny", 0)
                 executes {
                     executeTpdeny(it, true)
                 }
@@ -159,14 +164,16 @@ object TPACommand {
 
     fun executeTpaccept(context: CommandContext<ServerCommandSource>, findSource: Boolean): Int {
         TPACache.closeTpa(if (findSource) null else EntityArgumentType.getPlayer(context, "user"), context.source.player) {
+            val delay = context.source.player.getPermission("teleport.tpa.timeout.[int]", config.teleportDelay)
+
             TeleportRequest.builder {
                 player(it.teleportingEntity)
                 destination(it.targetLocationEntity.pos)
                 dimension(it.targetLocationEntity.world)
-            }.execute(config.teleportDelay.toLong())
+            }.execute(delay.toLong())
             it.requester().sendMessage(LiteralText("TPA accepted"), false)
-            if (config.teleportDelay > 0) {
-                it.teleportingEntity.sendMessage(LiteralText("Teleporting in ${config.teleportDelay.toLong()} seconds..."), false)
+            if (delay > 0) {
+                it.teleportingEntity.sendMessage(LiteralText("Teleporting in $delay seconds..."), false)
             }
         }
         return 1
